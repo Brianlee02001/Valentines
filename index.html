@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Be My Valentines?</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('rose-strawberry-background.jpg');  /* Background image */
+            background-size: cover;  /* Ensure it covers the entire page */
+            background-position: center;  /* Center the image */
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+}
+
+        h1 {
+            font-size: 4em;
+            color: #ff69b4;
+            font-weight: bold;
+        }
+        .button-container {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        button {
+            padding: 15px 25px;
+            font-size: 1.5em;
+            cursor: pointer;
+            border: none;
+            border-radius: 10px;
+            background-color: #ff69b4;
+            color: white;
+            transition: background-color 0.3s;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: #ff1493;
+        }
+        .button-container button.no {
+            font-size: 1.2em;
+        }
+        .message {
+            margin-top: 30px;
+            font-size: 1.5em;
+            color: #ff69b4;
+            font-weight: bold;
+        }
+        .time-slot-container {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        .time-column {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .time-slot {
+            padding: 10px 20px;
+            font-size: 1.2em;
+            cursor: pointer;
+            border: none;
+            border-radius: 10px;
+            background-color: #ff69b4;
+            color: white;
+            transition: background-color 0.3s;
+        }
+        .time-slot:hover {
+            background-color: #ff1493;
+        }
+        .rose-image {
+            margin-top: 70px;
+            width: 900px;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    
+    <h1>Bunny, Will you be my Valentines?</h1>
+    <div class="button-container">
+        <button class="yes" onclick="handleYesClick()">Yes</button>
+        <button class="no" onclick="handleNoClick()">No</button>
+    </div>
+    <div class="message" id="message"></div>
+    <div id="date-spots" class="button-container" style="display: none;">
+        <button onclick="selectDateSpot('Gelato on Ascent')">Gelato on Ascent</button>
+        <button onclick="selectDateSpot('Comic Store on Pearl')">Comic Store on Pearl</button>
+        <button onclick="selectDateSpot('Aquarium on Pearl')">Aquarium on Pearl</button>
+        <button onclick="selectDateSpot('Pizzeria on Ascent')">Pizzeria on Ascent</button>
+    </div>
+    <div id="time-slots" class="time-slot-container" style="display: none;"></div>
+
+    <script>
+        let noClickCount = 0;
+
+        function handleYesClick() {
+            document.getElementById("message").innerHTML = "That's my lil bunny :>";
+            document.querySelector(".yes").style.display = "none";
+            document.querySelector(".no").style.display = "none";
+            document.querySelector("h1").innerText = "Now here's your chance to plan a date of ours, pick a date spot bunny";
+            document.getElementById("date-spots").style.display = "block";
+        }
+
+        function handleNoClick() {
+            noClickCount++;
+            if (noClickCount >= 100) {
+                document.getElementById("message").innerHTML = "You really don't want to be my Valentine? 😞";
+            } else {
+                document.getElementById("message").innerHTML = `You really don't want to be my Valentines huh...bitch you clicked "No" ${noClickCount} times. You might as well just say yes now -.-`;
+            }
+            document.querySelector(".no").style.fontSize = `${1.2 + noClickCount * 0.02}em`;
+        }
+
+        function selectDateSpot(spot) {
+            document.getElementById("message").innerHTML = `mmmm ${spot} good choice bunny :>, now pick a time`;
+            document.getElementById("date-spots").style.display = "none";
+            generateTimeSlots();
+        }
+
+        function generateTimeSlots() {
+            let timeSlotsContainer = document.getElementById("time-slots");
+            timeSlotsContainer.innerHTML = '';  // Clear previous time slots if any
+
+            // Time slots from 12:00 AM to 1:00 PM (first column)
+            let firstColumnTimes = [];
+            for (let hour = 0; hour <= 13; hour++) {
+                let hour12 = hour % 12 || 12;
+                let ampm = hour < 12 ? "AM" : "PM";
+                firstColumnTimes.push(`${hour12}:00 ${ampm}`);
+            }
+
+            // Time slots from 2:00 PM to 11:00 PM (second column)
+            let secondColumnTimes = [];
+            for (let hour = 14; hour <= 23; hour++) {
+                let hour12 = hour % 12 || 12;
+                let ampm = hour < 12 ? "AM" : "PM";
+                secondColumnTimes.push(`${hour12}:00 ${ampm}`);
+            }
+
+            // Create two columns for time slots
+            let column1 = document.createElement("div");
+            column1.classList.add("time-column");
+            firstColumnTimes.forEach(time => {
+                let button = document.createElement("button");
+                button.innerText = time;
+                button.classList.add("time-slot");
+                button.onclick = () => selectTimeSlot(time);
+                column1.appendChild(button);
+            });
+
+            let column2 = document.createElement("div");
+            column2.classList.add("time-column");
+            secondColumnTimes.forEach(time => {
+                let button = document.createElement("button");
+                button.innerText = time;
+                button.classList.add("time-slot");
+                button.onclick = () => selectTimeSlot(time);
+                column2.appendChild(button);
+            });
+
+            timeSlotsContainer.appendChild(column1);
+            timeSlotsContainer.appendChild(column2);
+            timeSlotsContainer.style.display = "flex";
+        }
+
+        function selectTimeSlot(time) {
+            document.getElementById("message").innerHTML = `${time}? Don't forget about it, I look forward to spending valentines with you bunny <3 `;
+            document.getElementById("time-slots").style.display = "none";
+            document.querySelector("h1").style.display = "none";  // Remove the title
+            
+            // Insert image of rose with strawberries in the shape of a heart
+            const image = document.createElement("img");
+            image.src = "rose-strawberry-heart.jpg";  // Path to your image
+            image.alt = "Rose with strawberries in a heart shape";
+            image.classList.add("rose-image");
+            document.body.appendChild(image);  // Append the image to the body
+        }
+    </script>
+</body>
+</html>
